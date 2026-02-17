@@ -1,0 +1,17 @@
+{
+  "name": "pawpal-be",
+  "version": "1.0.0",
+  "description": "Backend server app for pet adoption management system",
+  "license": "ISC",
+  "author": "dinson",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.2.1"
+  }
+}
