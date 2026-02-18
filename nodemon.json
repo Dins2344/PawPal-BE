@@ -5,7 +5,9 @@
     ],
     "ext": "js,json",
     "ignore": [
-        "logs/*",
-        "node_modules/*"
+        "logs/**",
+        "uploads/**",
+        "node_modules/**",
+        "*.log"
     ]
 }

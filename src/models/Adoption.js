@@ -14,12 +14,11 @@ const adoptionSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ["pending", "confirmed", "cancelled"],
-            default: "confirmed",
+            enum: ["pending", "approved", "rejected"],
+            default: "pending",
         },
         adoptedAt: {
             type: Date,
-            default: Date.now,
         },
     },
     { timestamps: true }

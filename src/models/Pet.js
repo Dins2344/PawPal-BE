@@ -18,8 +18,13 @@ const petSchema = new mongoose.Schema(
         },
         species: {
             type: String,
-            enum: ["dog", "cat", "bird", "rabbit", "other"],
+            enum: ["Dog", "Cat", "Bird", "Rabbit", "Fish", "Other"],
             required: [true, "Species is required"],
+        },
+        gender: {
+            type: String,
+            enum: ["Male", "Female"],
+            required: [true, "Gender is required"],
         },
         description: {
             type: String,
@@ -28,9 +33,13 @@ const petSchema = new mongoose.Schema(
         image: {
             type: String,
         },
-        isAdopted: {
-            type: Boolean,
-            default: false,
+        imagePublicId: {
+            type: String,
+        },
+        status: {
+            type: String,
+            enum: ["available", "adopted", "pending"],
+            default: "available",
         },
     },
     { timestamps: true }

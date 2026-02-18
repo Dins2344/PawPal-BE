@@ -6,6 +6,8 @@ const logger = require("./src/utils/logger");
 const connectToDatabase = require("./src/db/connection");
 const userRouter = require("./src/routes/user");
 const authRouter = require("./src/routes/auth");
+const adminRouter = require("./src/routes/admin");
+const petRouter = require("./src/routes/pet");
 
 const app = express();
 
@@ -24,9 +26,12 @@ app.use(
     })
 );
 
+
 // ─── Routes ─────────────────────────────────────────────────────────────────
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/pets", petRouter);
 
 // ─── Start Server ───────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;

@@ -8,7 +8,9 @@ userRouter.get("/", (req, res) => {
     res.send("User route");
 });
 
-// Protected route — confirm adoption
+// Protected routes
 userRouter.post("/adopt", protect, userController.confirmAdoption);
+userRouter.get("/adoptions", protect, userController.getUserAdoptions);
+userRouter.delete("/adoptions/:adoptionId", protect, userController.withdrawAdoption);
 
 module.exports = userRouter;
