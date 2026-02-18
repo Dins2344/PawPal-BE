@@ -1,17 +1,14 @@
-const mongoose = require('mongoose');
-
-const mongoUrl = "mongodb+srv://dinsoncd:RNAGkZYoDTce9UFj@cluster0.a4lblch.mongodb.net/?appName=Cluster0"
-
-
+const mongoose = require("mongoose");
+const logger = require("../utils/logger");
 
 async function connectToDatabase() {
     try {
-        await mongoose.connect(mongoUrl);
-        console.log('Connected to MongoDB');
+        await mongoose.connect(process.env.MONGO_URI);
+        logger.info("Connected to MongoDB successfully");
     } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
+        logger.error(`Error connecting to MongoDB: ${error.message}`);
+        process.exit(1);
     }
 }
 
-
-module.exports = connectToDatabase;
+module.exports = connectToDatabase; 
