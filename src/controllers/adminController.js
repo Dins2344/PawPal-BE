@@ -2,6 +2,7 @@ const Pet = require("../models/Pet");
 const Adoption = require("../models/Adoption");
 const logger = require("../utils/logger");
 const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/cloudinary");
+const { sendAdoptionEmail } = require("../utils/emailService");
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  PET MANAGEMENT
@@ -172,7 +173,9 @@ exports.approveAdoption = async (req, res) => {
 
         logger.info(`Admin approving adoption: ${adoptionId}`);
 
-        const adoption = await Adoption.findById(adoptionId);
+        const adoption = await Adoption.findById(adoptionId)
+            .populate("user", "fullName email")
+            .populate("pet", "name");
         if (!adoption) {
             logger.warn(`Approve failed — adoption not found: ${adoptionId}`);
             return res.status(404).json({ message: "Adoption request not found" });
@@ -193,7 +196,15 @@ exports.approveAdoption = async (req, res) => {
         await adoption.save();
 
         // Mark pet as adopted
-        await Pet.findByIdAndUpdate(adoption.pet, { status: "adopted" });
+        await Pet.findByIdAndUpdate(adoption.pet._id, { status: "adopted" });
+
+        // Send approval email to user
+        sendAdoptionEmail({
+            toEmail: adoption.user.email,
+            toName: adoption.user.fullName,
+            petName: adoption.pet.name,
+            status: "approved",
+        });
 
         logger.info(`Adoption approved: ${adoptionId}`);
         return res.status(200).json({ message: "Adoption approved successfully" });
@@ -214,7 +225,9 @@ exports.rejectAdoption = async (req, res) => {
 
         logger.info(`Admin rejecting adoption: ${adoptionId}`);
 
-        const adoption = await Adoption.findById(adoptionId);
+        const adoption = await Adoption.findById(adoptionId)
+            .populate("user", "fullName email")
+            .populate("pet", "name");
         if (!adoption) {
             logger.warn(`Reject failed — adoption not found: ${adoptionId}`);
             return res.status(404).json({ message: "Adoption request not found" });
@@ -234,7 +247,15 @@ exports.rejectAdoption = async (req, res) => {
         await adoption.save();
 
         // Make pet available again
-        await Pet.findByIdAndUpdate(adoption.pet, { status: "available" });
+        await Pet.findByIdAndUpdate(adoption.pet._id, { status: "available" });
+
+        // Send rejection email to user
+        sendAdoptionEmail({
+            toEmail: adoption.user.email,
+            toName: adoption.user.fullName,
+            petName: adoption.pet.name,
+            status: "rejected",
+        });
 
         logger.info(`Adoption rejected: ${adoptionId}`);
         return res.status(200).json({ message: "Adoption rejected successfully" });
